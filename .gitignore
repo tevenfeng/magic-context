@@ -113,3 +113,15 @@ packages/plugin/scripts/mural-test-output/
 AgentLogs/
 .agent-logs/
 tests/docker/.generated/
+
+# DeepSeek Harness dev environment (local smoke-test profiles, credentials copy)
+.dsh-dev/
+.dsh-ref/
+.bun-cache/
+.pnpm-store/
+.pnpm-cache/
+.tmp/
+.tools/
+.dsh-src/
+.pw-browsers/
+.npm-cache/

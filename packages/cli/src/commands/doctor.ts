@@ -25,6 +25,7 @@ import {
     runV22BackfillCommands,
     type V22BackfillCommandArgs,
 } from "../lib/v22-backfill-commands";
+import { runDshDoctor } from "./doctor-dsh";
 import { runDoctor as runOmpDoctor } from "./doctor-omp";
 import { runDoctor as runOpenCodeDoctor } from "./doctor-opencode";
 import { doctor as runPiDoctor } from "./doctor-pi";
@@ -145,6 +146,8 @@ async function dispatchDoctor(adapter: HarnessAdapter, options: RunDoctorOptions
                 force: options.force,
                 issue: options.issue,
             });
+        case "dsh":
+            return runDshDoctor({ force: options.force, issue: options.issue });
     }
 }
 

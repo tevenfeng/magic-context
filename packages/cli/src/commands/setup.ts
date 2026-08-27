@@ -10,6 +10,7 @@
 import type { HarnessAdapter } from "../adapters/types";
 import { resolveAdaptersForCommand } from "../lib/harness-select";
 import { intro, log, note, outro } from "../lib/prompts";
+import { runDshSetup } from "./setup-dsh";
 import { runSetup as runOmpSetup } from "./setup-omp";
 import { runSetup as runOpenCodeSetup } from "./setup-opencode";
 import { runSetup as runPiSetup } from "./setup-pi";
@@ -68,6 +69,8 @@ async function dispatchSetup(adapter: HarnessAdapter, dryRun: boolean): Promise<
             return runPiSetup({ dryRun });
         case "omp":
             return runOmpSetup({ dryRun });
+        case "dsh":
+            return runDshSetup({ dryRun });
     }
 }
 

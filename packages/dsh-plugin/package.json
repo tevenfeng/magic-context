@@ -1,0 +1,82 @@
+{
+    "name": "@cortexkit/dsh-magic-context",
+    "version": "0.0.1-poc",
+    "description": "DeepSeek Harness plugin for Magic Context — self-managing context without compaction pauses",
+    "keywords": [
+        "deepseek-harness",
+        "dsh",
+        "cordis",
+        "magic-context",
+        "compaction",
+        "context",
+        "llm"
+    ],
+    "author": "Cortexkit",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/cortexkit/magic-context",
+        "directory": "packages/dsh-plugin"
+    },
+    "type": "module",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "default": "./dist/index.js"
+        },
+        "./client": {
+            "default": "./dist/client.js"
+        },
+        "./package.json": "./package.json"
+    },
+    "files": [
+        "dist",
+        "cordis.patch.yml",
+        "README.md"
+    ],
+    "dsh": {
+        "bundle": {
+            "patch": "./cordis.patch.yml"
+        },
+        "client": {
+            "inject": [
+                "@deepseek-ai/dsh-client-runtime",
+                "@deepseek-ai/dsh-client-locale",
+                "@deepseek-ai/dsh-client-ui-slots",
+                "@deepseek-ai/dsh-client-ui-conversation"
+            ],
+            "platform": "web"
+        }
+    },
+    "scripts": {
+        "build": "rm -rf dist && bun build src/index.ts --outdir dist --target node --format esm --external '@deepseek-ai/*' --external 'node:*' --external 'jsonc-parser' && tsc --emitDeclarationOnly && cp -p client-dist/client.js client-dist/client.js.map dist/",
+        "typecheck": "tsc --noEmit",
+        "test": "bun test",
+        "lint": "biome check src tests",
+        "format": "biome format --write src tests"
+    },
+    "dependencies": {
+        "@deepseek-ai/cordis": "4.0.1",
+        "@deepseek-ai/dsh-agent": "0.1.1-rc.2",
+        "@deepseek-ai/dsh-compaction": "0.1.1-rc.2",
+        "@deepseek-ai/dsh-compaction-basic": "0.1.1-rc.2",
+        "@deepseek-ai/dsh-llm": "0.1.1-rc.2",
+        "@deepseek-ai/dsh-session": "0.1.1-rc.2",
+        "@deepseek-ai/dsh-tools": "0.1.1-rc.2",
+        "jsonc-parser": "^3.3.1",
+        "zod": "^4.1.8"
+    },
+    "devDependencies": {
+        "@biomejs/biome": "^2.5.1",
+        "@types/bun": "^1.3.10",
+        "@types/node": "^22.20.0",
+        "bun-types": "^1.3.10",
+        "fzstd": "^0.1.1",
+        "typescript": "^5.8.0"
+    },
+    "engines": {
+        "node": ">=24.0.0"
+    }
+}

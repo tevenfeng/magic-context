@@ -98,7 +98,7 @@ irm https://raw.githubusercontent.com/cortexkit/magic-context/master/scripts/ins
 npx @cortexkit/magic-context@latest setup
 ```
 
-向导会自动检测你拥有的 harness（OpenCode、Pi，或两者），添加插件，关闭内置压缩，帮助你为 historian、dreamer 和 sidekick 选择模型，并解决与其他上下文管理插件的冲突。用 `--harness opencode` 或 `--harness pi` 指定某个 harness。
+向导会自动检测你拥有的 harness（OpenCode、Pi、OMP、DeepSeek Harness，或任意组合），添加插件，关闭内置压缩，帮助你为 historian、dreamer 和 sidekick 选择模型，并解决与其他上下文管理插件的冲突。用 `--harness opencode`、`--harness pi`、`--harness omp` 或 `--harness dsh` 指定某个 harness。
 
 > **为什么关闭内置压缩？** Magic Context 自己管理上下文。宿主的压缩会干扰它的缓存感知延迟操作，并造成双重压缩。
 
@@ -113,9 +113,13 @@ npx @cortexkit/magic-context@latest setup
 
 **Pi:** `npx @cortexkit/magic-context@latest setup --harness pi`（需要 Pi `>= 0.74.0`）。Pi 扩展与 OpenCode 共享同一个数据库，项目记忆和嵌入会在两者之间汇集。
 
+**Oh My Pi (OMP)：** `npx @cortexkit/magic-context@latest setup --harness omp`（需要 OMP `>= 17.1.7`）。setup 会通过 `omp plugin` 安装 Pi 兼容扩展，关闭 OMP 原生压缩与自动记忆，并遵循 OMP profiles、`PI_CODING_AGENT_DIR` 和已初始化的 XDG 布局。
+
+**DeepSeek Harness (DSH)：** `npx @cortexkit/magic-context@latest setup --harness dsh`。setup 会修改 profile 的 `cordis.patch.yml`（停用默认的 `compaction-basic` 引擎、启用 Magic Context），并固定 historian 模型。手动 profile 设置与配置见 [docs/dsh.md](docs/dsh.md)。
+
 **故障排查：** `npx @cortexkit/magic-context@latest doctor` 会自动检测你的 harness，检查冲突（压缩、OMO hooks、DCP），验证插件和 TUI 侧边栏，对数据库运行完整性检查，并尽力修复。添加 `--issue` 可生成可直接提交的 bug 报告。
 
-无论是全新项目还是长期运行的项目，工作方式都相同：安装，重启 harness，然后 Magic Context 从那一刻开始捕获上下文。它不会回填安装之前的 OpenCode 或 Pi 会话。
+无论是全新项目还是长期运行的项目，工作方式都相同：安装，重启 harness，然后 Magic Context 从那一刻开始捕获上下文。它不会回填安装之前的 OpenCode、Pi、OMP 或 DSH 会话。
 
 <details>
 <summary><strong>与其他上下文管理插件的兼容性</strong></summary>

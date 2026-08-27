@@ -2,7 +2,7 @@
  * Harness selection logic for the unified Magic Context CLI.
  *
  * Resolves which adapter(s) a command should target based on:
- *   1. `--harness opencode|pi|omp` flag (hard override, no prompts)
+ *   1. `--harness opencode|pi|omp|dsh` flag (hard override, no prompts)
  *   2. Auto-detect installed harnesses, prompting only when ambiguous
  *
  * Mirrors AFT's selection model — battle-tested cross-harness UX.
@@ -21,7 +21,7 @@ function parseHarnessFlag(argv: string[]): HarnessFlagResult {
     if (idx === -1) return { kind: "absent" };
     const value = argv[idx + 1];
     if (!value || value.startsWith("--")) return { kind: "invalid", value: null };
-    if (value === "opencode" || value === "pi" || value === "omp") {
+    if (value === "opencode" || value === "pi" || value === "omp" || value === "dsh") {
         return { kind: "valid", harness: value };
     }
     return { kind: "invalid", value };
@@ -54,15 +54,15 @@ export async function resolveAdaptersForCommand(
     if (flag.kind === "invalid") {
         throw new Error(
             flag.value === null
-                ? "Missing value for --harness (expected opencode, pi, or omp)"
-                : `Invalid --harness value: ${flag.value} (expected opencode, pi, or omp)`,
+                ? "Missing value for --harness (expected opencode, pi, omp, or dsh)"
+                : `Invalid --harness value: ${flag.value} (expected opencode, pi, omp, or dsh)`,
         );
     }
 
     const installed = getInstalledAdapters();
 
     if (installed.length === 0) {
-        log.warn("No supported harness was detected on PATH (opencode, pi, omp).");
+        log.warn("No supported harness was detected on PATH (opencode, pi, omp, dsh).");
         const pick = await selectOne(`Which harness do you want to ${options.verb}?`, [
             {
                 label: "OpenCode",
@@ -78,6 +78,11 @@ export async function resolveAdaptersForCommand(
                 label: "Oh My Pi (OMP)",
                 value: "omp",
                 hint: "@cortexkit/pi-magic-context",
+            },
+            {
+                label: "DeepSeek Harness (DSH)",
+                value: "dsh",
+                hint: "@cortexkit/dsh-magic-context",
             },
         ]);
         return [getAdapter(pick as HarnessKind)];
